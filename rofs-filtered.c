@@ -403,10 +403,13 @@ static int should_hide(const char *name, mode_t mode) {
     for (int i = 0; i < modes_count; ++i)
         if (mode == modes[i]) {
             log_msg(LOG_DEBUG, "type: %07o %s", mode, name);
+            if (conf.invert)
+                goto allow_type;
             return !conf.invert;
          }
     if (conf.invert && mode != S_IFREG && mode != S_IFDIR)
         return conf.invert;
+  allow_type:
 
     /* Append slash if directory */
     if (mode == S_IFDIR) {
